@@ -1,0 +1,31 @@
+{
+  "name": "organchain",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha",
+    "dev": "next dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/harshitjaiswal27/OrganChain.git"
+  },
+  "author": "Harshit Jaiswal",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/harshitjaiswal27/OrganChain/issues"
+  },
+  "homepage": "https://github.com/harshitjaiswal27/OrganChain#readme",
+  "dependencies": {
+    "fs-extra": "^9.0.0",
+    "ganache-cli": "^6.9.1",
+    "mocha": "^7.1.1",
+    "next": "^4.1.4",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "solc": "^0.4.17",
+    "truffle-hdwallet-provider": "0.0.3",
+    "web3": "^1.0.0-beta.26"
+  }
+}
