@@ -1,7 +1,8 @@
 import React,{ Component} from 'react';
+import axios from 'axios';
 import Layout from '../components/Layout';
 import { Form , Button, Grid, Segment, Header} from 'semantic-ui-react';
-import { Router } from '../routes'
+import { Router } from '../routes';
 
 class DonorSignUp extends Component {
     state = {
@@ -20,7 +21,10 @@ class DonorSignUp extends Component {
 
         const { fname, lname, gender, address, phone, email,bloodgroup, organ } = this.state;
 
-        console.log('{',fname, lname, gender, address, phone, email,bloodgroup, organ,'}')
+        const donor = { fname, lname, gender, address, phone, email,bloodgroup, organ };
+
+        axios.post("http://localhost:5000/donors/add",donor)
+            .then(res => console.log(res.data));
 
         Router.pushRoute('/');
     }

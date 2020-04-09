@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/harshitjaiswal27/OrganChain#readme",
   "dependencies": {
+    "axios": "^0.19.2",
     "fs-extra": "^9.0.0",
     "ganache-cli": "^6.9.1",
     "mocha": "^7.1.1",
