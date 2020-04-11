@@ -12,7 +12,7 @@ router.route('/add').post((req,res)=>{
         fname: req.body.fname,
         lname: req.body.lname,
         gender: req.body.gender,
-        address: req.body.address,
+        city: req.body.city,
         phone: req.body.phone,
         email: req.body.email,
         bloodgroup: req.body.bloodgroup,
