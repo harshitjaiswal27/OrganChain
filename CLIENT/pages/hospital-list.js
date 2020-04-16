@@ -19,6 +19,7 @@ class HospitalList extends Component{
                     hospitals.push(hospital)
                }
             })
+            .catch(err => console.log("IN catch"+err));
             return {hospitals};
     }
 

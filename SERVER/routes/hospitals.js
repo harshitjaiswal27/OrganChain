@@ -5,7 +5,9 @@ router.route('/:city').get((req,res)=>{
     hospital.find({
         city : req.params.city
     })
-    .then(hospitals=> res.send(hospitals))
+    .then(hospitals=> {
+        res.send(hospitals)
+    })
     .catch(err => res.status(400).json('Error:'+err));
 }); 
 

@@ -19,7 +19,13 @@ router.route('/add').post((req,res)=>{
         organ: req.body.organ
     })
     .then(()=> res.json('Donor added Successfully'))
-    .catch(err => res.status(400).json('Error:'+err));
+    .catch(err => res.status(400).send({
+        error : {
+            message : "Email already Registered"
+        }
+    }));
 });
 
 module.exports = router;
+
+

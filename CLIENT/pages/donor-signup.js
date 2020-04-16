@@ -1,7 +1,7 @@
 import React,{ Component} from 'react';
 import axios from 'axios';
 import Layout from '../components/Layout';
-import { Form , Button, Grid, Segment, Header} from 'semantic-ui-react';
+import { Form , Button, Grid, Segment, Header, Message} from 'semantic-ui-react';
 import { Router } from '../routes';
 
 class DonorSignUp extends Component {
@@ -13,20 +13,23 @@ class DonorSignUp extends Component {
         phone : '',
         email : '',
         bloodgroup : 'A+',
-        organ : 'Eyes'
+        organ : 'Eyes',
+        errorMsg : ''
     }
 
     onSubmit = event => {
         event.preventDefault();
+        this.setState({errorMsg:''});
 
         const { fname, lname, gender, city, phone, email,bloodgroup, organ } = this.state;
-
         const donor = { fname, lname, gender, city, phone, email,bloodgroup, organ };
 
         axios.post("http://localhost:5000/donors/add",donor)
-            .then(res => console.log(res.data));
-
-        Router.pushRoute(`/hospital-list/${this.state.city}`);
+            .then((res) => {
+                console.log("Donor Added Successfully");
+                Router.pushRoute(`/hospital-list/${this.state.city}`);
+            })
+            .catch(err=> console.log("In catch:"+err));
     }
 
     onChange = event => {
@@ -38,13 +41,13 @@ class DonorSignUp extends Component {
             <Layout>
                 <div>
                     <Grid centered columns={2} style={{marginTop:'20px'}}>
-                        <Grid.Column width={10}>
+                        <Grid.Column width={11}>
                             <Segment>
                             <Header as="h3" color="grey" style={{textAlign:"center"}}>
                                 New Donor? PLease Sign Up Here!
                             </Header>
                             </Segment>
-                            <Form onSubmit={this.onSubmit}>
+                            <Form onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
                                     <Form.Group widths={2}>
                                         <Form.Input 
                                             value={this.state.fname} 
@@ -143,6 +146,7 @@ class DonorSignUp extends Component {
                                             <option value='Kidney'>Kidney</option>
                                         </Form.Field>
                                     </Form.Group>
+                                    <Message error header="Oops!" content={this.state.errorMsg} />
                                     <Segment basic textAlign={"center"}>
                                         <Button positive style={{textAlign:"center"}} type='submit'>Submit</Button>
                                     </Segment>
