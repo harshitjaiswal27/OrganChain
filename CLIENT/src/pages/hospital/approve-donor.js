@@ -1,15 +1,20 @@
 import React, { Component } from 'react';
 import { Grid, Form, Segment, Header, Button} from 'semantic-ui-react';
+import axios from 'axios';
 import ipfs from '../../ipfs';
 import Layout from '../../components/Layout';
-// import OrganChain from '../../ethereum/organchain'; 
+import OrganChain from '../../ethereum/organchain'; 
+import web3 from '../../ethereum/web3';
 
 class ApproveDonor extends Component{
     state ={
-        name : '',
+        fname : '',
+        lname : '',
         email : '',
+        donorId : '',
         buffer : null,
-        ipfsHash : ''
+        ipfsHash : '',
+        EMRHash : ''
     }
 
     onChange = event => {
@@ -25,18 +30,41 @@ class ApproveDonor extends Component{
         }
     }
 
-    onApprove = async (event) => {
+    onApprove = (event) => {
         event.preventDefault();
 
-        const { name , email, buffer, ipfsHash } = this.state;
+        const { fname, lname , email, buffer, ipfsHash, EMRHash, donorId } = this.state;
 
-        await ipfs.add(buffer, (err, result)=>{
-            if(err) console.log(err);
-            else this.setState({ ipfsHash : result[0].hash });
-        });
+        axios.get(`/api/donors/${email}`)
+            .then(async (res)=>{
+                const {gender, city, phone, email, organ, bloodgroup } = res.data;
 
-        const donor = { name, email, ipfsHash };
-        console.log(donor);
+                const data = JSON.stringify({ fname, lname, gender, city, phone, email});
+                
+                const buf = Buffer.from(data);
+                
+                await ipfs.files.add(buf, (err, result) => {
+                    if (err) console.error(err);
+                    this.setState({ ipfsHash : result[0].hash });
+                });
+                
+                await ipfs.files.add(buffer, (err, result) => {
+                    if (err) console.error(err);
+                    this.setState({ EMRHash: result[0].hash });
+                });
+
+                try{
+                    const accounts = await web3.eth.getAccounts();
+                    await OrganChain.methods.addDonor(donorId, ipfsHash, EMRHash, web3.utils.asciiToHex(organ), web3.utils.asciiToHex(bloodgroup)).send({
+                                from : accounts[0],
+                                gas: 1000000
+                            });
+                }
+                catch(err){
+                    console.log(err);
+                }
+            })
+            .catch(err=> console.log("User Does Not Exist"));
     }
 
     render(){
@@ -52,11 +80,19 @@ class ApproveDonor extends Component{
                             </Segment>
                             <Form onSubmit={this.onApprove}>
                                 <Form.Input 
-                                    value={this.state.name} 
+                                    value={this.state.fname} 
                                     onChange={this.onChange} 
-                                    name="name"  
-                                    label='Name' 
-                                    placeholder='Name' 
+                                    name="fname"  
+                                    label='First Name' 
+                                    placeholder='First Name' 
+                                    required
+                                />
+                                 <Form.Input 
+                                    value={this.state.lname} 
+                                    onChange={this.onChange} 
+                                    name="lname"  
+                                    label='Last Name' 
+                                    placeholder='Last Name' 
                                     required
                                 />
                                 <Form.Input 
@@ -66,6 +102,14 @@ class ApproveDonor extends Component{
                                     label='Email' 
                                     placeholder='Email' 
                                     type="email"
+                                    required
+                                />
+                                <Form.Input 
+                                    value={this.state.donorId}   
+                                    onChange={this.onChange} 
+                                    name="donorId" 
+                                    label='Donor Public Key' 
+                                    placeholder='DOnor Public Key' 
                                     required
                                 />
                                 <Form.Input

@@ -1,11 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const cors = require('cors');
 const db = require('./config/dbconnect');
 const port = process.env.PORT || 5000;
 var app = express();
 
-app.use(cors());
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(bodyParser.json());
 

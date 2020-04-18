@@ -1,6 +1,6 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var donorSchema= mongoose.Schema({
+const donorSchema= mongoose.Schema({
     fname: {type: String, required:true},
     lname: {type: String, required:true},
     gender: {type: String, required:true},

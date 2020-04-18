@@ -4,22 +4,28 @@ contract OrganChain{
     
     struct Recipient{
         address recipientId;
-        address donorId;
         address hospitalId;
         string ipfsHash;
         string EMRHash;
         bytes32 organ;
         bytes32 bloodgroup;
+        bool matchFound;
         bool exist;
     }
     
     struct Donor{
         address donorId;
-        address recipientId;
         string ipfsHash;
         string EMRHash;
         bytes32 organ;
         bytes32 bloodgroup;
+        bool matchFound;
+        bool exist;
+    }
+    
+    struct Transplant{
+        address recipientId;
+        address donorId;
         bool exist;
     }
     
@@ -27,10 +33,10 @@ contract OrganChain{
     mapping(address => Recipient) Recipients;
     mapping(address => Donor) Donors;
     mapping(address => address[]) Hospital_Recipients;
+    mapping(address => Transplant) Transplants;
     
     address[] recipient_arr;
     address[] donor_arr;
-    
     
     modifier checkRecipientExist(address _recipient_addr){
         require(!Recipients[_recipient_addr].exist);
@@ -51,29 +57,29 @@ contract OrganChain{
         {
             Donor memory newDonor = Donor({
                 donorId : _donor_addr,
-                recipientId : address(0x0),
                 ipfsHash : _ipfsHash,
                 EMRHash : _EMRHash,
                 organ : _organ,
                 bloodgroup : _bloodgroup,
+                matchFound : false,
                 exist : true
             });
             Donors[_donor_addr] = newDonor;
             donor_arr.push(_donor_addr);
         }
     
-    function getdonor(address _donor_addr) public view returns (address, address, string memory, bytes32, bytes32){
+    function getDonor(address _donor_addr) public view returns (address, string memory, bytes32, bytes32, bool){
             require(Donors[_donor_addr].exist);
             return(
                 Donors[_donor_addr].donorId,
-                Donors[_donor_addr].recipientId,
                 Donors[_donor_addr].ipfsHash,
                 Donors[_donor_addr].organ,
-                Donors[_donor_addr].bloodgroup
+                Donors[_donor_addr].bloodgroup,
+                Donors[_donor_addr].matchFound
             );
     }
     
-    function addDonor(
+    function addRecipient(
         address _recipient_addr,
         address _hospital_addr,
         string memory _ipfsHash,
@@ -84,11 +90,11 @@ contract OrganChain{
             Recipient memory newRecipient = Recipient({
                 recipientId : _recipient_addr,
                 hospitalId : _hospital_addr,
-                donorId : address(0x0),
                 ipfsHash : _ipfsHash,
                 EMRHash : _EMRHash,
                 organ : _organ,
                 bloodgroup : _bloodgroup,
+                matchFound : false,
                 exist : true
             });
             Recipients[_recipient_addr] = newRecipient;
@@ -96,15 +102,15 @@ contract OrganChain{
             Hospital_Recipients[_hospital_addr].push(_recipient_addr);
         }
     
-    function getRecipient(address _recipient_addr) public view returns (address, address, address, string memory, bytes32, bytes32){
+    function getRecipient(address _recipient_addr) public view returns (address, address, string memory, bytes32, bytes32, bool){
             require(Recipients[_recipient_addr].exist);
             return(
                 Recipients[_recipient_addr].recipientId,
-                Recipients[_recipient_addr].donorId,
                 Recipients[_recipient_addr].hospitalId,
                 Recipients[_recipient_addr].ipfsHash,
                 Recipients[_recipient_addr].organ,
-                Recipients[_recipient_addr].bloodgroup
+                Recipients[_recipient_addr].bloodgroup,
+                Recipients[_recipient_addr].matchFound
            );
     }
     
@@ -114,7 +120,7 @@ contract OrganChain{
     }
     
     function getRecipientDetail(address _hospital_addr, uint256 i) public view returns(address, string memory, bytes32, bytes32){  
-            if(Recipients[Hospital_Recipients[_hospital_addr][i]].donorId == address(0x0)){
+            if(!Recipients[Hospital_Recipients[_hospital_addr][i]].matchFound){
                 return(
                     Recipients[Hospital_Recipients[_hospital_addr][i]].recipientId,
                     Recipients[Hospital_Recipients[_hospital_addr][i]].ipfsHash,
@@ -140,11 +146,13 @@ contract OrganChain{
     function transplantMatch(address _recipient_addr) public returns(address) {
         for(uint i=0 ; i<donor_arr.length ; i++)
         {
-            if( (Recipients[_recipient_addr].organ == Donors[donor_arr[i]].organ) 
+            if( !Donors[donor_arr[i]].matchFound 
+            && (Recipients[_recipient_addr].organ == Donors[donor_arr[i]].organ) 
             && (Recipients[_recipient_addr].bloodgroup == Donors[donor_arr[i]].bloodgroup))
             {   
-                Recipients[_recipient_addr].donorId = donor_arr[i];
-                Donors[donor_arr[i]].recipientId = _recipient_addr;
+                Transplants[_recipient_addr] = Transplant(_recipient_addr,donor_arr[i],true);
+                Recipients[_recipient_addr].matchFound = true;
+                Donors[donor_arr[i]].matchFound = true;
                 return (donor_arr[i]);
             }
         }

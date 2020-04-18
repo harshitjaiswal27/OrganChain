@@ -42,7 +42,7 @@ class HospitalList extends Component{
     render(){
         return(
             <Layout>
-                <div style={{marginTop:"20px"}}>
+                <div style={{marginTop:"20px"}} >
                     <Segment>
                         <Header as="h3" color="grey" style={{textAlign:"center"}}>
                             Please visit any one hospital from the given list, to get yourself approved!

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {Grid, Segment, Header, Form, Button} from 'semantic-ui-react';
 import Layout from '../components/Layout';
+import axios from 'axios';
 
 class HospitalLogin extends Component{
     state ={
@@ -10,6 +11,20 @@ class HospitalLogin extends Component{
 
     onSubmit = event =>{
         event.preventDefault();
+
+        const { username , password} = this.state;
+        const user = { username , password};
+
+        axios.post("/api/hospitals/login",user)
+            .then((res) => {
+                if (!res.data.token) 
+                    window.alert("Wrong Credentials");
+                localStorage.setItem("isAuthenticated","true");
+                window.localStorage.setItem("token",res.data.token);
+                window.location = "/";
+            })
+            .catch(err=> window.alert("Invalid Credentials"));
+
     }
 
     onChange = event => {
