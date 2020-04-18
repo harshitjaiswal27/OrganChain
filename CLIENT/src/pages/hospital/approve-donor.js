@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Grid, Form, Segment, Header, Button, Label} from 'semantic-ui-react';
+import { Grid, Form, Segment, Header, Button} from 'semantic-ui-react';
 import ipfs from '../../ipfs';
 import Layout from '../../components/Layout';
+// import OrganChain from '../../ethereum/organchain'; 
 
 class ApproveDonor extends Component{
     state ={
@@ -9,10 +10,6 @@ class ApproveDonor extends Component{
         email : '',
         buffer : null,
         ipfsHash : ''
-    }
-
-    onApprove = event =>{
-        event.preventDefault();
     }
 
     onChange = event => {
@@ -33,7 +30,7 @@ class ApproveDonor extends Component{
 
         const { name , email, buffer, ipfsHash } = this.state;
 
-        await ipfs.add(this.state.buffer, (err, result)=>{
+        await ipfs.add(buffer, (err, result)=>{
             if(err) console.log(err);
             else this.setState({ ipfsHash : result[0].hash });
         });
@@ -69,7 +66,6 @@ class ApproveDonor extends Component{
                                     label='Email' 
                                     placeholder='Email' 
                                     type="email"
-                                    focus
                                     required
                                 />
                                 <Form.Input
@@ -77,7 +73,6 @@ class ApproveDonor extends Component{
                                     name="EMR"
                                     label="EMR"
                                     type="file"
-                                    focus
                                     required
                                 />
                                 <Segment basic textAlign={"center"}>

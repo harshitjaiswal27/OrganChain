@@ -1,12 +1,16 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import { Card} from 'semantic-ui-react';
+import { Card, Segment, Header} from 'semantic-ui-react';
 import Layout from '../components/Layout';
 
 class HospitalList extends Component{
-    static async getInitialProps(props){
+    state={
+        hospitals : []
+    }
+
+    componentDidMount(){
         var hospitals = [];
-        await axios.get(`http://localhost:5000/hospitals/${props.query.city}`)
+        axios.get(`/api/hospitals/${this.props.match.params.city}`)
             .then(res => {
                 for(let i = 0;i<res.data.length;i++){
                     const hospital = {
@@ -14,17 +18,17 @@ class HospitalList extends Component{
                       city: res.data[i].city,
                       name: res.data[i].username,
                       contact: `Contact : ${res.data[i].contact}`,
-                      img: `../static/images/${res.data[i].img}`
+                      img: `../images/${res.data[i].img}`
                     }
                     hospitals.push(hospital)
                }
+               this.setState({hospitals});
             })
-            .catch(err => console.log("IN catch"+err));
-            return {hospitals};
+            .catch(err => console.log("Error:"+err));
     }
 
     renderHospitals(){
-        var hospitals = this.props.hospitals.map( hospital =>{
+        var hospitals = this.state.hospitals.map( hospital =>{
             return {
                 image : hospital.img,
                 header : hospital.name,
@@ -32,14 +36,22 @@ class HospitalList extends Component{
                 description : hospital.address
             };
         });
-        return <Card.Group divided items={hospitals} />;
+        return <Card.Group items={hospitals} centered />;
     }
 
     render(){
         return(
             <Layout>
                 <div style={{marginTop:"20px"}}>
+                    <Segment>
+                        <Header as="h3" color="grey" style={{textAlign:"center"}}>
+                            Please visit any one hospital from the given list, to get yourself approved!
+                        </Header>
+                    </Segment>
                     {this.renderHospitals()}
+                </div>
+                <div>
+                    
                 </div>
             </Layout>
         );

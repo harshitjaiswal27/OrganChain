@@ -1,10 +1,10 @@
 import React,{ Component} from 'react';
-import axios from 'axios';
-import Layout from '../components/Layout';
-import { Form , Button, Grid, Segment, Header, Message} from 'semantic-ui-react';
-import { Router } from '../routes';
+import Layout from '../../components/Layout';
+import { Form , Button, Grid, Segment, Header} from 'semantic-ui-react';
+import ipfs from '../../ipfs';
+// import OrganChain from '../../ethereum/organchain';
 
-class DonorSignUp extends Component {
+class RegisterRecipient extends Component {
     state = {
         fname : '',
         lname : '',
@@ -14,22 +14,40 @@ class DonorSignUp extends Component {
         email : '',
         bloodgroup : 'A+',
         organ : 'Eyes',
-        errorMsg : ''
+        buffer : null,
+        ipfsHash : '',
+        publicKey : '',
     }
 
-    onSubmit = event => {
+    componentDidMount() {
+        if (window.localStorage.getItem("Authenticated") === "true") {
+          console.log("Beta pahile login karo")
+        }
+      }
+
+    onSubmit = async (event) => {
         event.preventDefault();
-        this.setState({errorMsg:''});
+        
+        const { fname, lname, gender, city, phone, email, bloodgroup, organ, buffer, ipfsHash, publicKey } = this.state;
 
-        const { fname, lname, gender, city, phone, email,bloodgroup, organ } = this.state;
-        const donor = { fname, lname, gender, city, phone, email,bloodgroup, organ };
+        await ipfs.add(buffer, (err, result)=>{
+            if(err) console.log(err);
+            else {
+                const ipfsHash = result[0].hash;
+                this.setState({ ipfsHash });
+            }
+        });
+        console.log({ fname, lname, gender, city, phone, email, bloodgroup, organ, ipfsHash, publicKey });
+        
+    }
 
-        axios.post("http://localhost:5000/donors/add",donor)
-            .then((res) => {
-                console.log("Donor Added Successfully");
-                Router.pushRoute(`/hospital-list/${this.state.city}`);
-            })
-            .catch(err=> console.log("In catch:"+err));
+    captureFile = event => {
+        const file = event.target.files[0];
+        const reader = new window.FileReader();
+        reader.readAsArrayBuffer(file);
+        reader.onloadend = ()=>{
+            this.setState({buffer : Buffer(reader.result)});
+        }
     }
 
     onChange = event => {
@@ -44,7 +62,7 @@ class DonorSignUp extends Component {
                         <Grid.Column width={11}>
                             <Segment>
                             <Header as="h3" color="grey" style={{textAlign:"center"}}>
-                                New Donor? PLease Sign Up Here!
+                                Register New Recipient
                             </Header>
                             </Segment>
                             <Form onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
@@ -63,7 +81,6 @@ class DonorSignUp extends Component {
                                             name="lname" 
                                             label='Last name' 
                                             placeholder='Last name' 
-                                            focus
                                             required
                                         />
                                     </Form.Group>
@@ -74,7 +91,6 @@ class DonorSignUp extends Component {
                                             name="gender"
                                             label='Gender' 
                                             control='select'
-                                            focus
                                             required
                                             >
                                             <option value='Male'>Male</option>
@@ -87,7 +103,6 @@ class DonorSignUp extends Component {
                                             name="city"
                                             label='City' 
                                             control='select'
-                                            focus
                                             required
                                             >
                                             <option value='Gwalior'>Gwalior</option>
@@ -102,7 +117,6 @@ class DonorSignUp extends Component {
                                             name="phone"   
                                             label='Phone' 
                                             placeholder='Phone' 
-                                            focus
                                             required
                                         />
                                         <Form.Input 
@@ -111,8 +125,7 @@ class DonorSignUp extends Component {
                                             name="email"   
                                             type="email"
                                             label='Email' 
-                                            placeholder='Email'
-                                            focus 
+                                            placeholder='Email' 
                                             required
                                         />
                                     </Form.Group>
@@ -123,7 +136,6 @@ class DonorSignUp extends Component {
                                             name="bloodgroup"
                                             label='Blood Group' 
                                             control='select'
-                                            focus
                                             required>
                                             <option value='A+'>A+</option>
                                             <option value='A-'>A-</option>
@@ -140,13 +152,28 @@ class DonorSignUp extends Component {
                                             name="organ"
                                             label='Organ' 
                                             control='select'
-                                            focus
                                             required>
                                             <option value='Eyes'>Eyes</option>
                                             <option value='Kidney'>Kidney</option>
                                         </Form.Field>
                                     </Form.Group>
-                                    <Message error header="Oops!" content={this.state.errorMsg} />
+                                    <Form.Group widths={2}>
+                                        <Form.Input 
+                                            value={this.state.publicKey} 
+                                            onChange={this.onChange} 
+                                            name="publicKey"  
+                                            label="Recipient's Public Key" 
+                                            placeholder="Recipient's Public Key"
+                                            required
+                                        />
+                                        <Form.Input
+                                            onChange={this.captureFile}
+                                            name="EMR"
+                                            label="EMR"
+                                            type="file"
+                                            required
+                                        />
+                                    </Form.Group>
                                     <Segment basic textAlign={"center"}>
                                         <Button positive style={{textAlign:"center"}} type='submit'>Submit</Button>
                                     </Segment>
@@ -159,4 +186,4 @@ class DonorSignUp extends Component {
     }
 }
 
-export default DonorSignUp;
+export default RegisterRecipient;

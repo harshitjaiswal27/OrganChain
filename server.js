@@ -9,10 +9,10 @@ app.use(cors());
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(bodyParser.json());
 
-const donorsRouter = require('./routes/donors');
-const hospitalsRouter = require('./routes/hospitals');
-app.use('/donors',donorsRouter);
-app.use('/hospitals',hospitalsRouter);
+const donorsRouter = require('./routes/api/donors');
+const hospitalsRouter = require('./routes/api/hospitals');
+app.use('/api/donors',donorsRouter);
+app.use('/api/hospitals',hospitalsRouter);
 
 app.get("/",function(req,res){
     res.send("This is home page");

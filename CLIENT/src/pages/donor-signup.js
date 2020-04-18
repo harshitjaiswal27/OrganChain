@@ -1,8 +1,9 @@
 import React,{ Component} from 'react';
-import Layout from '../../components/Layout';
+import axios from 'axios';
+import Layout from '../components/Layout';
 import { Form , Button, Grid, Segment, Header, Message} from 'semantic-ui-react';
 
-class RegisterRecipient extends Component {
+class DonorSignUp extends Component {
     state = {
         fname : '',
         lname : '',
@@ -12,33 +13,22 @@ class RegisterRecipient extends Component {
         email : '',
         bloodgroup : 'A+',
         organ : 'Eyes',
-        buffer : null,
-        ipfsHash : '',
-        publicKey : '',
         errorMsg : ''
     }
 
-    onSubmit = async (event) => {
+    onSubmit = event => {
         event.preventDefault();
-        
-        const { fname, lname, gender, city, phone, email, bloodgroup, organ, buffer, ipfsHash, publicKey } = this.state;
+        this.setState({errorMsg:''});
 
-        await ipfs.add(this.state.buffer, (err, result)=>{
-            if(err) console.log(err);
-            else this.setState({ ipfsHash : result[0].hash });
-        });
+        const { fname, lname, gender, city, phone, email,bloodgroup, organ } = this.state;
+        const donor = { fname, lname, gender, city, phone, email,bloodgroup, organ };
 
-        console.log({ fname, lname, gender, city, phone, bloodgroup, organ, ipfsHash, publicKey });
-        
-    }
-
-    captureFile = event => {
-        const file = event.target.files[0];
-        const reader = new window.FileReader();
-        reader.readAsArrayBuffer(file);
-        reader.onloadend = ()=>{
-            this.setState({buffer : Buffer(reader.result)});
-        }
+        axios.post("/api/donors",donor)
+            .then((res) => {
+                console.log("Donor Added Successfully");
+                window.location = "/hospital-list/" + city;
+            })
+            .catch(err=> console.log("Email Already Register"));
     }
 
     onChange = event => {
@@ -53,7 +43,7 @@ class RegisterRecipient extends Component {
                         <Grid.Column width={11}>
                             <Segment>
                             <Header as="h3" color="grey" style={{textAlign:"center"}}>
-                                Register New Recipient
+                                New Donor? PLease Sign Up Here!
                             </Header>
                             </Segment>
                             <Form onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
@@ -72,7 +62,6 @@ class RegisterRecipient extends Component {
                                             name="lname" 
                                             label='Last name' 
                                             placeholder='Last name' 
-                                            focus
                                             required
                                         />
                                     </Form.Group>
@@ -83,7 +72,6 @@ class RegisterRecipient extends Component {
                                             name="gender"
                                             label='Gender' 
                                             control='select'
-                                            focus
                                             required
                                             >
                                             <option value='Male'>Male</option>
@@ -96,7 +84,6 @@ class RegisterRecipient extends Component {
                                             name="city"
                                             label='City' 
                                             control='select'
-                                            focus
                                             required
                                             >
                                             <option value='Gwalior'>Gwalior</option>
@@ -111,7 +98,6 @@ class RegisterRecipient extends Component {
                                             name="phone"   
                                             label='Phone' 
                                             placeholder='Phone' 
-                                            focus
                                             required
                                         />
                                         <Form.Input 
@@ -120,8 +106,7 @@ class RegisterRecipient extends Component {
                                             name="email"   
                                             type="email"
                                             label='Email' 
-                                            placeholder='Email'
-                                            focus 
+                                            placeholder='Email' 
                                             required
                                         />
                                     </Form.Group>
@@ -132,7 +117,6 @@ class RegisterRecipient extends Component {
                                             name="bloodgroup"
                                             label='Blood Group' 
                                             control='select'
-                                            focus
                                             required>
                                             <option value='A+'>A+</option>
                                             <option value='A-'>A-</option>
@@ -149,29 +133,10 @@ class RegisterRecipient extends Component {
                                             name="organ"
                                             label='Organ' 
                                             control='select'
-                                            focus
                                             required>
                                             <option value='Eyes'>Eyes</option>
                                             <option value='Kidney'>Kidney</option>
                                         </Form.Field>
-                                    </Form.Group>
-                                    <Form.Group widths={2}>
-                                        <Form.Input 
-                                            value={this.state.publicKey} 
-                                            onChange={this.onChange} 
-                                            name="publicKey"  
-                                            label="Recipient's Public Key" 
-                                            placeholder="Recipient's Public Key"
-                                            required
-                                        />
-                                        <Form.Input
-                                            onChange={this.captureFile}
-                                            name="EMR"
-                                            label="EMR"
-                                            type="file"
-                                            focus
-                                            required
-                                        />
                                     </Form.Group>
                                     <Message error header="Oops!" content={this.state.errorMsg} />
                                     <Segment basic textAlign={"center"}>
@@ -186,4 +151,4 @@ class RegisterRecipient extends Component {
     }
 }
 
-export default RegisterRecipient;
+export default DonorSignUp;

@@ -10,8 +10,6 @@ class HospitalLogin extends Component{
 
     onSubmit = event =>{
         event.preventDefault();
-
-        
     }
 
     onChange = event => {
@@ -45,7 +43,6 @@ class HospitalLogin extends Component{
                                     label='Password' 
                                     placeholder='Password' 
                                     type="password"
-                                    focus
                                     required
                                 />
                                 <Segment basic textAlign={"center"}>

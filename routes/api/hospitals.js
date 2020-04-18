@@ -1,8 +1,8 @@
 const router = require('express').Router();
-let hospital = require('../models/hospital.model');
+let Hospital = require('../../models/hospital.model');
 
 router.route('/:city').get((req,res)=>{
-    hospital.find({
+    Hospital.find({
         city : req.params.city
     })
     .then(hospitals=> {
