@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch , Redirect} from "react-router-dom";
 
 import DonorLogin from './pages/donor-login';
 import DonorSignUp from './pages/donor-signup';
@@ -20,10 +20,22 @@ class Routes extends Component{
                 <Route exact path="/donor-login" component={DonorLogin} />
                 <Route exact path="/hospital-list/:city" component={HospitalList} />
                 <Route exact path="/hospital-login" component={HospitalLogin} />
-                <Route exact path="/hospital/approve-donor" component={ApproveDonor} />
-                <Route exact path="/hospital/patient-record" component={PatientRecord} />
-                <Route exact path="/hospital/register-recipient" component={RegisterRecipient} />
-                <Route exact path="/hospital/transplant-match" render={()=><TransplantMatch/>} />
+                { window.localStorage.getItem("isAuthenticated") ?
+                    <Route exact path="/hospital/register-recipient" component={RegisterRecipient} />
+                    : <Redirect to="/hospital-login" />
+                }
+                { window.localStorage.getItem("isAuthenticated") ?
+                    <Route exact path="/hospital/approve-donor" component={ApproveDonor} />     
+                   : <Redirect to="/hospital-login" />
+                }
+                { window.localStorage.getItem("isAuthenticated") ?
+                    <Route exact path="/hospital/patient-record" component={PatientRecord} />
+                    : <Redirect to="/hospital-login" />
+                }
+                { window.localStorage.getItem("isAuthenticated") ?
+                    <Route exact path="/hospital/transplant-match" render={()=><TransplantMatch/>} />
+                    : <Redirect to="/hospital-login" />
+                }
             </Switch>
         )
     }

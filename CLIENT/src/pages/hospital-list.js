@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 import { Card, Segment, Header} from 'semantic-ui-react';
-import Layout from '../components/Layout';
 
 class HospitalList extends Component{
     state={
@@ -41,19 +40,14 @@ class HospitalList extends Component{
 
     render(){
         return(
-            <Layout>
-                <div style={{marginTop:"20px"}} >
-                    <Segment>
-                        <Header as="h3" color="grey" style={{textAlign:"center"}}>
-                            Please visit any one hospital from the given list, to get yourself approved!
-                        </Header>
-                    </Segment>
-                    {this.renderHospitals()}
-                </div>
-                <div>
-                    
-                </div>
-            </Layout>
+            <div>
+                <Segment>
+                    <Header as="h3" color="grey" style={{textAlign:"center"}}>
+                        Please visit any one hospital from the given list, to get yourself approved!
+                    </Header>
+                </Segment>
+                {this.renderHospitals()}
+            </div>
         );
     }
 }

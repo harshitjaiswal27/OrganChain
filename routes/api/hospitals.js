@@ -15,11 +15,11 @@ router.route('/:city').get((req,res)=>{
 router.route('/login').post((req,res)=>{
     const {username, password} = req.body;
     Hospital.findOne({ username })
-        .then( user => {
-            if(!user) return res.status(400).json({ msg : 'User does not exist' });
-            if (!user.validPassword(password)) return res.status(400).json({ msg : 'Invalid Credentials!'});
+        .then( hospital => {
+            if(!hospital) return res.status(400).json({ msg : 'User does not exist' });
+            if (!hospital.validPassword(password)) return res.status(400).json({ msg : 'Invalid Credentials!'});
 
-            jwt.sign({user}, 'Think=>Code=>Build=>Hack', (err, token)=>{
+            jwt.sign({hospital}, 'Think=>Code=>Build=>Hack', (err, token)=>{
                 if(err) throw err;
                 res.json({ token });
             })

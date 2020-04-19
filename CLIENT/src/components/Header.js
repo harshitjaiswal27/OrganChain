@@ -15,6 +15,12 @@ export default class Header extends Component {
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
 
+  logout = (event)=>{
+    window.localStorage.removeItem("isAuthenticated");
+    window.localStorage.removeItem("token");
+    this.setState({activeItem : "home"});
+  }
+
   render() {
       return (
         <div>
@@ -22,12 +28,23 @@ export default class Header extends Component {
             <Menu.Item
               name='OrganChain'
             />
-            <Menu.Menu position="right" >
-                <Menu.Item as={Nav} to="/" name="home" />
-                <Menu.Item as={Nav} to="/donor-login" name="Donor Login" />
-                <Menu.Item as={Nav} to="/donor-signup" name="Donor Sign Up" />
-                <Menu.Item as={Nav} to="/hospital-login" name="Hospital Login" />
-            </Menu.Menu> 
+              { !window.localStorage.getItem("isAuthenticated") ?
+                <Menu.Menu position="right" >
+                  <Menu.Item as={Nav} to="/" name="home" />
+                  <Menu.Item as={Nav} to="/donor-login" name="Donor Login" />
+                  <Menu.Item as={Nav} to="/donor-signup" name="Donor Sign Up" />
+                  <Menu.Item as={Nav} to="/hospital-login" name="Hospital Login" />
+                </Menu.Menu> 
+                : 
+                <Menu.Menu position="right" >
+                  <Menu.Item as={Nav} to="/hospital/profile" name="profile" />
+                  <Menu.Item as={Nav} to="/hospital/approve-donor" name="Approve Donor" />
+                  <Menu.Item as={Nav} to="/hospital/register-recipient" name="Register Recipient" />
+                  <Menu.Item as={Nav} to="/hospital/transplant-match" name="Transplant Match" />
+                  <Menu.Item as={Nav} to="/hospital/patient-record" name="Patient Record" />
+                  <Menu.Item as={Nav} to="/" name="Logout" onClick={this.logout}/>
+                </Menu.Menu> 
+              }   
           </Menu>
         </div>
       )
