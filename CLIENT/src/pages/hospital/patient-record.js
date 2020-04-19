@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Grid, Form, Segment, Header, Button, Icon} from 'semantic-ui-react';
-// import ipfs from '../../ipfs';
+import OrganChain from '../../ethereum/organchain';
 
 class PatientRecord extends Component{
     state ={
@@ -15,7 +15,17 @@ class PatientRecord extends Component{
     onSubmit = async (event) => {
         event.preventDefault();
 
-        ///Get IPFS hash
+        const { publicKey} = this.state;
+
+        try{
+            const ipfsHash = await OrganChain.methods.getEMR(publicKey).call();
+            this.setState({ipfsHash});
+            console.log(ipfsHash);
+        }
+        catch(err){
+            console.log(err);
+        }
+        
     }
 
     render(){

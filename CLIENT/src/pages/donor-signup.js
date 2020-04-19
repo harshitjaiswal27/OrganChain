@@ -41,7 +41,7 @@ class DonorSignUp extends Component {
                         <Header as="h3" color="grey" style={{textAlign:"center"}}>
                             New Donor? PLease Sign Up Here!
                         </Header>
-                    </Segment>
+                    {/* </Segment> */}
                     <Form onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
                         <Form.Group widths={2}>
                             <Form.Input 
@@ -140,6 +140,7 @@ class DonorSignUp extends Component {
                             <Button positive style={{textAlign:"center"}} type='submit'>Submit</Button>
                         </Segment>
                     </Form>
+                    </Segment>
                 </Grid.Column>
             </Grid>
         );

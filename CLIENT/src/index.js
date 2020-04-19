@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from "react-router-dom";
 import Routes from './Routes';
 import Layout from './components/Layout'
+import './main.css';
 
 class App extends Component {
     render(){

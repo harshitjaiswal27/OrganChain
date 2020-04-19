@@ -24,7 +24,7 @@ export default class Header extends Component {
   render() {
       return (
         <div>
-          <Menu pointing secondary >
+          <Menu pointing secondary  >
             <Menu.Item
               name='OrganChain'
             />
