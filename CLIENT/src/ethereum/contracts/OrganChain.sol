@@ -68,10 +68,9 @@ contract OrganChain{
             donor_arr.push(_donor_addr);
         }
     
-    function getDonor(address _donor_addr) public view returns (address, string memory, bytes32, bytes32, bool){
+    function getDonor(address _donor_addr) public view returns ( string memory, bytes32, bytes32, bool){
             require(Donors[_donor_addr].exist);
             return(
-                Donors[_donor_addr].donorId,
                 Donors[_donor_addr].ipfsHash,
                 Donors[_donor_addr].organ,
                 Donors[_donor_addr].bloodgroup,
@@ -102,10 +101,9 @@ contract OrganChain{
             Hospital_Recipients[_hospital_addr].push(_recipient_addr);
         }
     
-    function getRecipient(address _recipient_addr) public view returns (address, address, string memory, bytes32, bytes32, bool){
+    function getRecipient(address _recipient_addr) public view returns ( address, string memory, bytes32, bytes32, bool){
             require(Recipients[_recipient_addr].exist);
             return(
-                Recipients[_recipient_addr].recipientId,
                 Recipients[_recipient_addr].hospitalId,
                 Recipients[_recipient_addr].ipfsHash,
                 Recipients[_recipient_addr].organ,

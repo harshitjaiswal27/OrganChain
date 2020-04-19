@@ -37,7 +37,7 @@ export default class Header extends Component {
                 </Menu.Menu> 
                 : 
                 <Menu.Menu position="right" >
-                  <Menu.Item as={Nav} to="/hospital/profile" name="profile" />
+                  <Menu.Item as={Nav} to="/" name="home" />
                   <Menu.Item as={Nav} to="/hospital/approve-donor" name="Approve Donor" />
                   <Menu.Item as={Nav} to="/hospital/register-recipient" name="Register Recipient" />
                   <Menu.Item as={Nav} to="/hospital/transplant-match" name="Transplant Match" />

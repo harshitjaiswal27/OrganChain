@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Grid, Form, Segment, Header, Button} from 'semantic-ui-react';
+import { Grid, Form, Segment, Header, Button, Divider} from 'semantic-ui-react';
 import axios from 'axios';
 import ipfs from '../../ipfs';
 import OrganChain from '../../ethereum/organchain'; 
@@ -74,52 +74,53 @@ class ApproveDonor extends Component{
                         <Header as="h3" color="grey" style={{textAlign:"center"}}>
                             Approve Donor
                         </Header>
+                        <Divider/>
+                        <Form onSubmit={this.onApprove}>
+                            <Form.Input 
+                                value={this.state.fname} 
+                                onChange={this.onChange} 
+                                name="fname"  
+                                label='First Name' 
+                                placeholder='First Name' 
+                                required
+                            />
+                            <Form.Input 
+                                value={this.state.lname} 
+                                onChange={this.onChange} 
+                                name="lname"  
+                                label='Last Name' 
+                                placeholder='Last Name' 
+                                required
+                            />
+                            <Form.Input 
+                                value={this.state.email}   
+                                onChange={this.onChange} 
+                                name="email" 
+                                label='Email' 
+                                placeholder='Email' 
+                                type="email"
+                                required
+                            />
+                            <Form.Input 
+                                value={this.state.donorId}   
+                                onChange={this.onChange} 
+                                name="donorId" 
+                                label='Donor Public Key' 
+                                placeholder='DOnor Public Key' 
+                                required
+                            />
+                            <Form.Input
+                                onChange={this.captureFile}
+                                name="EMR"
+                                label="EMR"
+                                type="file"
+                                required
+                            />
+                            <Segment basic textAlign={"center"}>
+                                <Button positive style={{textAlign:"center"}} type='submit'>Approve</Button>
+                            </Segment>
+                        </Form>
                     </Segment>
-                    <Form onSubmit={this.onApprove}>
-                        <Form.Input 
-                            value={this.state.fname} 
-                            onChange={this.onChange} 
-                            name="fname"  
-                            label='First Name' 
-                            placeholder='First Name' 
-                            required
-                        />
-                        <Form.Input 
-                            value={this.state.lname} 
-                            onChange={this.onChange} 
-                            name="lname"  
-                            label='Last Name' 
-                            placeholder='Last Name' 
-                            required
-                        />
-                        <Form.Input 
-                            value={this.state.email}   
-                            onChange={this.onChange} 
-                            name="email" 
-                            label='Email' 
-                            placeholder='Email' 
-                            type="email"
-                            required
-                        />
-                        <Form.Input 
-                            value={this.state.donorId}   
-                            onChange={this.onChange} 
-                            name="donorId" 
-                            label='Donor Public Key' 
-                            placeholder='DOnor Public Key' 
-                            required
-                        />
-                        <Form.Input
-                            onChange={this.captureFile}
-                            name="EMR"
-                            label="EMR"
-                            type="file"
-                            required
-                        />
-                        <Segment basic textAlign={"center"}>
-                            <Button positive style={{textAlign:"center"}} type='submit'>Approve</Button>
-                        </Segment>
-                    </Form>
                 </Grid.Column>
             </Grid>
         )
