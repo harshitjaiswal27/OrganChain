@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import { Card, Button, Divider, Header} from 'semantic-ui-react';
+import { Card, Button, Divider, Header,Portal, Segment} from 'semantic-ui-react';
 import web3 from '../../ethereum/web3';
 import OrganChain from '../../ethereum/organchain';
 import ipfs from '../../ipfs';
@@ -18,7 +18,8 @@ class RenderList extends Component{
             contact : '',
             city : '',
             donorFound : false,
-            loading : false 
+            loading : false ,
+            open : false
         }
     }
 
@@ -55,10 +56,12 @@ class RenderList extends Component{
             }
         }
         catch(err){
-            window.alert("Match Not Found");
+            this.setState({ open: true })
         }
         this.setState( { loading : false} );
     }
+
+    handleClose = () => this.setState({ open: false })
 
     render(){
         return(
@@ -99,6 +102,12 @@ class RenderList extends Component{
                             <strong>Contact : </strong> {this.props.recipient.contact} <br/><br/>
                         </Card.Description>
                     </Card.Content>
+                    <Portal onClose={this.handleClose} open={this.state.open}>
+                        <Segment style={{left: '40%', position: 'fixed', top: '50%', zIndex: 1000,}}>
+                            <Header>Sorry, No Match Found!</Header>
+                            <Button content='OK' negative onClick={this.handleClose}/>
+                        </Segment>
+                    </Portal>
                     <Card.Content extra style={{textAlign:"center"}}>
                         { this.state.donorFound ? 
                             <Header as="h3" color="grey" >

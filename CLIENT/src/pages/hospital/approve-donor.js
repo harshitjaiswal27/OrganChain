@@ -34,12 +34,14 @@ class ApproveDonor extends Component{
     onApprove =  (event) => {
         event.preventDefault();
 
-        this.setState( { loading :true , errMsg :'' } );
+        this.setState( { errMsg :'' } );
 
         const { fname, lname , email, buffer, donorId } = this.state;
 
         axios.get(`/api/donors/${email}`)
             .then(async (res)=>{
+
+                this.setState({loading :true });
 
                 const {gender, city, phone, email, organ, bloodgroup } = res.data;
 
@@ -63,9 +65,9 @@ class ApproveDonor extends Component{
                 catch(err){
                     this.setState({ errMsg : err.message })
                 }
+                this.setState( { loading : false} );
             })
             .catch(err=>  this.setState({ errMsg : err.message }));
-        this.setState( { loading : false} );
     }
 
     render(){
