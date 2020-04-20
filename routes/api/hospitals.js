@@ -26,4 +26,12 @@ router.route('/login').post((req,res)=>{
         })
 })
 
+router.route('/profile/:publicKey').get((req,res)=>{
+    Hospital.findOne({ hospitalpublickey :req.params.publicKey })
+        .then(hospital=>{
+            res.send(hospital)
+        })
+        .catch(err => res.status(400).json('Error:'+err));
+})
+
 module.exports = router;

@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { Grid, Form, Segment, Header, Button, Icon, Divider} from 'semantic-ui-react';
+import { Grid, Form, Segment, Header, Button, Icon, Divider, Message} from 'semantic-ui-react';
 import OrganChain from '../../ethereum/organchain';
 
 class PatientRecord extends Component{
     state ={
         publicKey : '',
-        ipfsHash : ''
+        ipfsHash : '',
+        loading : false,
+        errMsg : ''
     }
 
     onChange = event => {
@@ -15,16 +17,20 @@ class PatientRecord extends Component{
     onSubmit = async (event) => {
         event.preventDefault();
 
+        this.setState( { loading :true , errMsg :'' } );
+
         const { publicKey} = this.state;
 
         try{
             const ipfsHash = await OrganChain.methods.getEMR(publicKey).call();
+            if(!ipfsHash)
+                throw "Patient Does Not Exist!";
             this.setState({ipfsHash});
         }
         catch(err){
-            console.log(err);
+            this.setState({ errMsg : err })
         }
-        
+        this.setState( { loading : false} );
     }
 
     render(){
@@ -36,7 +42,7 @@ class PatientRecord extends Component{
                             Get Patient's EMR 
                         </Header>
                         <Divider/>   
-                        <Form onSubmit={this.onSubmit}>
+                        <Form onSubmit={this.onSubmit}  error={!!this.state.errMsg}>
                             <Form.Input 
                                 value={this.state.publicKey} 
                                 onChange={this.onChange} 
@@ -45,8 +51,9 @@ class PatientRecord extends Component{
                                 placeholder='Public Key' 
                                 required
                             />
+                            <Message error header="Oops!" content={this.state.errMsg} />
                             <Segment basic textAlign={"center"}>
-                                <Button positive style={{textAlign:"center"}} type='submit'>Get EMR</Button>
+                                <Button loading={this.state.loading} positive style={{textAlign:"center"}} type='submit'>Get EMR</Button>
                             </Segment>
                         </Form>
                         <Segment basic textAlign={"center"}>

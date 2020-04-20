@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import jwtDecode from 'jwt-decode';
-import { Grid, Divider} from 'semantic-ui-react';
+import { Grid, Divider, Dimmer, Loader} from 'semantic-ui-react';
 import OrganChain from '../../ethereum/organchain';
 import web3 from '../../ethereum/web3';
 import ipfs from '../../ipfs';
@@ -9,7 +9,8 @@ import RenderList from './render-list';
 class TransplantMatch extends Component{
 
     state = {
-        recipient_arr : []
+        recipient_arr : [],
+        loading : true
     }
 
     componentDidMount = async ()=>{
@@ -43,6 +44,7 @@ class TransplantMatch extends Component{
         catch(err){
             console.log("Error Catched => "+err);
         }
+        this.setState({loading : false})
     }
 
     renderList = ()=>{
@@ -59,11 +61,20 @@ class TransplantMatch extends Component{
 
     render(){
         return( 
-            <Grid centered columns={2} style={{marginTop:"10px"}}>
-                <Grid.Column width={12}>
-                    {this.renderList()}
-                </Grid.Column>
-            </Grid>
+            <div>
+                {
+                    this.state.loading ?
+                    <Dimmer active={this.state.loading} inverted >
+                        <Loader size='massive'>Loading</Loader>
+                    </Dimmer>
+                    :
+                    <Grid centered columns={2} style={{marginTop:"10px"}}>
+                        <Grid.Column width={12}>
+                            {this.renderList()} 
+                        </Grid.Column>
+                    </Grid>
+            }
+            </div>
         )
     }
 }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Grid, Form, Segment, Header, Button, Divider} from 'semantic-ui-react';
+import { Grid, Form, Segment, Header, Button, Divider, Message} from 'semantic-ui-react';
 import axios from 'axios';
 import ipfs from '../../ipfs';
 import OrganChain from '../../ethereum/organchain'; 
@@ -13,7 +13,9 @@ class ApproveDonor extends Component{
         donorId : '',
         buffer : null,
         ipfsHash : '',
-        EMRHash : ''
+        EMRHash : '',
+        loading : false ,
+        errMsg : ''
     }
 
     onChange = event => {
@@ -29,13 +31,16 @@ class ApproveDonor extends Component{
         }
     }
 
-    onApprove = (event) => {
+    onApprove =  (event) => {
         event.preventDefault();
+
+        this.setState( { loading :true , errMsg :'' } );
 
         const { fname, lname , email, buffer, donorId } = this.state;
 
         axios.get(`/api/donors/${email}`)
             .then(async (res)=>{
+
                 const {gender, city, phone, email, organ, bloodgroup } = res.data;
 
                 const data = JSON.stringify({ fname, lname, gender, city, phone, email});
@@ -56,10 +61,11 @@ class ApproveDonor extends Component{
                             });
                 }
                 catch(err){
-                    console.log(err);
+                    this.setState({ errMsg : err.message })
                 }
             })
-            .catch(err=> console.log("User Does Not Exist"));
+            .catch(err=>  this.setState({ errMsg : err.message }));
+        this.setState( { loading : false} );
     }
 
     render(){
@@ -71,7 +77,7 @@ class ApproveDonor extends Component{
                             Approve Donor
                         </Header>
                         <Divider/>
-                        <Form onSubmit={this.onApprove}>
+                        <Form onSubmit={this.onApprove} error={!!this.state.errMsg}>
                             <Form.Input 
                                 value={this.state.fname} 
                                 onChange={this.onChange} 
@@ -112,8 +118,9 @@ class ApproveDonor extends Component{
                                 type="file"
                                 required
                             />
+                            <Message error header="Oops!" content={this.state.errMsg} />
                             <Segment basic textAlign={"center"}>
-                                <Button positive style={{textAlign:"center"}} type='submit'>Approve</Button>
+                                <Button loading={this.state.loading} positive style={{textAlign:"center"}} type='submit'>Approve</Button>
                             </Segment>
                         </Form>
                     </Segment>

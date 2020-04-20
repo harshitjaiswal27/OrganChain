@@ -15,6 +15,7 @@ contract OrganChain{
     
     struct Donor{
         address donorId;
+        address recipientId;
         string ipfsHash;
         string EMRHash;
         bytes32 organ;
@@ -57,6 +58,7 @@ contract OrganChain{
         {
             Donor memory newDonor = Donor({
                 donorId : _donor_addr,
+                recipientId : address(0x0),
                 ipfsHash : _ipfsHash,
                 EMRHash : _EMRHash,
                 organ : _organ,
@@ -68,13 +70,14 @@ contract OrganChain{
             donor_arr.push(_donor_addr);
         }
     
-    function getDonor(address _donor_addr) public view returns ( string memory, bytes32, bytes32, bool){
+    function getDonor(address _donor_addr) public view returns ( string memory, bytes32, bytes32, bool, address){
             require(Donors[_donor_addr].exist);
             return(
                 Donors[_donor_addr].ipfsHash,
                 Donors[_donor_addr].organ,
                 Donors[_donor_addr].bloodgroup,
-                Donors[_donor_addr].matchFound
+                Donors[_donor_addr].matchFound,
+                Donors[_donor_addr].recipientId
             );
     }
     
@@ -159,6 +162,7 @@ contract OrganChain{
             && (Recipients[_recipient_addr].bloodgroup == Donors[donor_arr[i]].bloodgroup))
             {   
                 Transplants[_recipient_addr] = Transplant(_recipient_addr,donor_arr[i],true);
+                Donors[donor_arr[i]].recipientId = _recipient_addr;
                 Recipients[_recipient_addr].matchFound = true;
                 Donors[donor_arr[i]].matchFound = true;
             }

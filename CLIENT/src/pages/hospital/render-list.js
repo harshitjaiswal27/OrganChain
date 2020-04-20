@@ -17,12 +17,16 @@ class RenderList extends Component{
             email : '',
             contact : '',
             city : '',
-            donorFound : false
+            donorFound : false,
+            loading : false 
         }
     }
 
     onMatch = async()=>{
         const accounts = await web3.eth.getAccounts();
+        
+        this.setState( { loading :true} );
+
         try{
             await OrganChain.methods.transplantMatch(this.props.recipient.recipientId).send({
                 from : accounts[0],
@@ -51,9 +55,9 @@ class RenderList extends Component{
             }
         }
         catch(err){
-            console.log("ERROR => " + err);
+            window.alert("Match Not Found");
         }
-        
+        this.setState( { loading : false} );
     }
 
     render(){
@@ -81,7 +85,7 @@ class RenderList extends Component{
                         </Card.Content>
                     </Card>
                 }
-                <Card style={{width:"375px"}}>
+                <Card style={{width:"375px"}} >
                     <Card.Content>
                         <Card.Header style={{textAlign:"center"}}>{this.props.recipient.fname} {this.props.recipient.lname}</Card.Header>
                         <Card.Meta >{this.props.recipient.recipientId}</Card.Meta>
@@ -100,7 +104,7 @@ class RenderList extends Component{
                             <Header as="h3" color="grey" >
                                 Recipient
                             </Header>
-                            :<Button content="Match" positive onClick={this.onMatch}/>
+                            :<Button loading={this.state.loading} content="Match" positive onClick={this.onMatch}/>
                         }   
                     </Card.Content> 
                 </Card>

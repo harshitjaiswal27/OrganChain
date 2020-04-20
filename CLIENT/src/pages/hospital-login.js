@@ -1,28 +1,29 @@
 import React, { Component } from 'react';
-import {Grid, Segment, Header, Form, Button, Divider} from 'semantic-ui-react';
+import {Grid, Segment, Header, Form, Button, Divider, Message} from 'semantic-ui-react';
 import axios from 'axios';
 
 class HospitalLogin extends Component{
     state ={
         username : '',
-        password : ''
+        password : '',
+        errMsg :''
     }
 
     onSubmit = event =>{
         event.preventDefault();
+
+        this.setState( {  errMsg :'' } );
 
         const { username , password} = this.state;
         const user = { username , password};
 
         axios.post("/api/hospitals/login",user)
             .then((res) => {
-                if (!res.data.token) 
-                    window.alert("Wrong Credentials");
                 localStorage.setItem("isAuthenticated","true");
                 window.localStorage.setItem("token",res.data.token);
                 window.location = "/";
             })
-            .catch(err=> window.alert("Invalid Credentials"));
+            .catch(err=> this.setState({ errMsg : err.message }));
 
     }
 
@@ -39,7 +40,7 @@ class HospitalLogin extends Component{
                             Hospital Log In
                         </Header>
                         <Divider/>
-                        <Form onSubmit={this.onSubmit}>
+                        <Form onSubmit={this.onSubmit} error={!!this.state.errMsg}>
                             <Form.Input 
                                 value={this.state.username} 
                                 onChange={this.onChange} 
@@ -57,6 +58,7 @@ class HospitalLogin extends Component{
                                 type="password"
                                 required
                             />
+                            <Message error header="Oops!" content={this.state.errMsg} />
                             <Segment basic textAlign={"center"}>
                                 <Button positive style={{textAlign:"center"}} type='submit'>Submit</Button>
                             </Segment>

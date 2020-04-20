@@ -3,6 +3,7 @@ import { Route, Switch , Redirect} from "react-router-dom";
 
 import DonorLogin from './pages/donor-login';
 import DonorSignUp from './pages/donor-signup';
+import DonorProfile from './pages/donor/profile';
 import HospitalList from './pages/hospital-list';
 import HospitalLogin from './pages/hospital-login';
 import Home from './pages/home';
@@ -20,6 +21,7 @@ class Routes extends Component{
                 <Route exact path="/donor-login" component={DonorLogin} />
                 <Route exact path="/hospital-list/:city" component={HospitalList} />
                 <Route exact path="/hospital-login" component={HospitalLogin} />
+                <Route exact path="/donor/profile/:donorId" component={DonorProfile} />
                 { window.localStorage.getItem("isAuthenticated") ?
                     <Route exact path="/hospital/register-recipient" component={RegisterRecipient} />
                     : <Redirect to="/hospital-login" />

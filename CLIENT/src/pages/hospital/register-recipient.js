@@ -1,5 +1,5 @@
 import React,{ Component} from 'react';
-import { Form , Button, Grid, Segment, Header, Divider} from 'semantic-ui-react';
+import { Form , Button, Grid, Segment, Header, Divider, Message} from 'semantic-ui-react';
 import jwtDecode from 'jwt-decode';
 import ipfs from '../../ipfs';
 import OrganChain from '../../ethereum/organchain';
@@ -18,12 +18,16 @@ class RegisterRecipient extends Component {
         buffer : null,
         ipfsHash : '',
         publicKey : '',
-        EMRHash : ''
+        EMRHash : '',
+        loading : false,
+        errMsg : ''
     }
 
     onSubmit = async (event) => {
         event.preventDefault();
         
+        this.setState( { loading :true , errMsg :'' } );
+
         const { fname, lname, gender, city, phone, email, bloodgroup, organ, buffer, publicKey } = this.state;
 
         try{
@@ -45,9 +49,9 @@ class RegisterRecipient extends Component {
                     });
         }
         catch(err){
-            console.log(err);
+            this.setState({ errMsg : err.message })
         }
-        
+        this.setState( { loading : false} );
     }
 
     captureFile = event => {
@@ -72,7 +76,7 @@ class RegisterRecipient extends Component {
                             Register New Recipient
                         </Header>
                         <Divider/>
-                        <Form onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
+                        <Form onSubmit={this.onSubmit} error={!!this.state.errMsg}>
                             <Form.Group widths={2}>
                                 <Form.Input 
                                     value={this.state.fname} 
@@ -183,8 +187,9 @@ class RegisterRecipient extends Component {
                                     required
                                 />
                             </Form.Group>
+                            <Message error header="Oops!" content={this.state.errMsg} />
                             <Segment basic textAlign={"center"}>
-                                <Button positive style={{textAlign:"center"}} type='submit'>Submit</Button>
+                                <Button loading={this.state.loading} positive style={{textAlign:"center"}} type='submit'>Submit</Button>
                             </Segment>
                         </Form>
                     </Segment>

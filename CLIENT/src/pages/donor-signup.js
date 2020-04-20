@@ -1,6 +1,6 @@
 import React,{ Component} from 'react';
 import axios from 'axios';
-import { Form , Button, Grid, Segment, Header, Divider} from 'semantic-ui-react';
+import { Form , Button, Grid, Segment, Header, Divider, Message} from 'semantic-ui-react';
 
 class DonorSignUp extends Component {
     state = {
@@ -11,12 +11,14 @@ class DonorSignUp extends Component {
         phone : '',
         email : '',
         bloodgroup : 'A+',
-        organ : 'Eyes'
+        organ : 'Eyes',
+        errMsg : ''
     }
 
     onSubmit = event => {
         event.preventDefault();
-        this.setState({errorMsg:''});
+        
+        this.setState( {  errMsg :'' } );
 
         const { fname, lname, gender, city, phone, email,bloodgroup, organ } = this.state;
         const donor = { fname, lname, gender, city, phone, email,bloodgroup, organ };
@@ -26,7 +28,8 @@ class DonorSignUp extends Component {
                 console.log("Donor Added Successfully");
                 window.location = "/hospital-list/" + city;
             })
-            .catch(err=> console.log("Email Already Register"));
+            .catch(err=> this.setState({ errMsg : err.message }));
+            
     }
 
     onChange = event => {
@@ -42,7 +45,7 @@ class DonorSignUp extends Component {
                             New Donor? PLease Sign Up Here!
                         </Header>
                         <Divider/>
-                        <Form onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
+                        <Form onSubmit={this.onSubmit} error={!!this.state.errMsg}>
                             <Form.Group widths={2}>
                                 <Form.Input 
                                     value={this.state.fname} 
@@ -136,6 +139,7 @@ class DonorSignUp extends Component {
                                     <option value='Kidney'>Kidney</option>
                                 </Form.Field>
                             </Form.Group>
+                            <Message error header="Oops!" content={this.state.errMsg} />
                             <Segment basic textAlign={"center"}>
                                 <Button positive style={{textAlign:"center"}} type='submit'>Submit</Button>
                             </Segment>
