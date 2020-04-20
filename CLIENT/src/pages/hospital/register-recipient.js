@@ -24,29 +24,22 @@ class RegisterRecipient extends Component {
     onSubmit = async (event) => {
         event.preventDefault();
         
-        const { fname, lname, gender, city, phone, email, bloodgroup, organ, buffer, ipfsHash, EMRHash, publicKey } = this.state;
+        const { fname, lname, gender, city, phone, email, bloodgroup, organ, buffer, publicKey } = this.state;
 
         try{
             const data = JSON.stringify({ fname, lname, gender, city, phone, email});
                 
             const buf = Buffer.from(data);
                 
-            ipfs.files.add(buf, (err, result) => {
-                if (err) console.error(err);
-                console.log(result[0].hash);
-                this.setState({ ipfsHash : result[0].hash });
-            });
-
-            console.log(this.state.ipfsHash);
-                    
-            ipfs.files.add(buffer,(err, result) => {
-                if (err) console.error(err);
-                this.setState({ EMRHash: result[0].hash });
-            });
+            var result = await ipfs.files.add(buf);
+            this.setState({ipfsHash : result[0].hash});
+                                
+            result = await ipfs.files.add(buffer);
+            this.setState({EMRHash : result[0].hash});
 
             const hospital = await jwtDecode(window.localStorage.getItem("token"));
             const accounts = await web3.eth.getAccounts();
-            await OrganChain.methods.addRecipient(publicKey , hospital.hospital.hospitalpublickey, ipfsHash, EMRHash, web3.utils.asciiToHex(organ), web3.utils.asciiToHex(bloodgroup)).send({
+            await OrganChain.methods.addRecipient(publicKey , hospital.hospital.hospitalpublickey, this.state.ipfsHash, this.state.EMRHash, web3.utils.asciiToHex(organ), web3.utils.asciiToHex(bloodgroup)).send({
                         from : accounts[0],
                         gas: 1000000
                     });

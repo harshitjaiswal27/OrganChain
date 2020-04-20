@@ -1,4 +1,4 @@
-pragma solidity 0.4.22;
+    pragma solidity 0.4.22;
 
 contract OrganChain{
     
@@ -128,6 +128,16 @@ contract OrganChain{
             }
     }
     
+    function isMatchFound(address _recipient_addr) public view returns(bool){
+        return Recipients[_recipient_addr].matchFound;
+    }
+    
+    function getMatchedDonor(address _recipient_addr) public view returns(address){
+        return(
+            Transplants[_recipient_addr].donorId       
+        );
+    }
+    
     function getEMR(address _address) public view returns (string memory) {
         for(uint i=0 ; i<donor_arr.length ; i++)
         {
@@ -141,7 +151,7 @@ contract OrganChain{
         }
     }
     
-    function transplantMatch(address _recipient_addr) public returns(address) {
+    function transplantMatch(address _recipient_addr) public  {
         for(uint i=0 ; i<donor_arr.length ; i++)
         {
             if( !Donors[donor_arr[i]].matchFound 
@@ -151,7 +161,6 @@ contract OrganChain{
                 Transplants[_recipient_addr] = Transplant(_recipient_addr,donor_arr[i],true);
                 Recipients[_recipient_addr].matchFound = true;
                 Donors[donor_arr[i]].matchFound = true;
-                return (donor_arr[i]);
             }
         }
     }

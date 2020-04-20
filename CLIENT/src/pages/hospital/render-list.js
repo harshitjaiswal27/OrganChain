@@ -24,38 +24,34 @@ class RenderList extends Component{
     onMatch = async()=>{
         const accounts = await web3.eth.getAccounts();
         try{
-            const donorId = await OrganChain.methods.transplantMatch(this.props.recipient.recipientId).send({
+            await OrganChain.methods.transplantMatch(this.props.recipient.recipientId).send({
                 from : accounts[0],
                 gas : 1000000
             });
-            if (donorId.status === false) {
-                console.log("No match found");
-                window.alert("Sorry, no match found!");
-            }
+
+            const result = await OrganChain.methods.isMatchFound(this.props.recipient.recipientId).call();
+            if(result === "false")
+                window.alert("Match Not Found");
             else{
+                const donorId = await OrganChain.methods.getMatchedDonor(this.props.recipient.recipientId).call();
                 const donor = await OrganChain.methods.getDonor(donorId).call();
-                this.setState({donorId :donorId, organ: donor[1], bloogroup: donor[2]}); 
-                
-                await ipfs.cat(donor[1], (err, res) => {
-                    if(err){
-                        console.log(err);
-                        return;
-                    }
-                    const temp = JSON.parse(res.toString());
-                    this.setState({
-                        fname: temp["fname"],
-                        lname: temp["lname"],
-                        gender: temp["gender"],
-                        email: temp["email"],
-                        contact: temp["phone"],
-                        city: temp["city"],
-                        f: true
-                      });
+                this.setState({donorId :donorId, organ: web3.utils.hexToAscii(donor[1]), bloodgroup: web3.utils.hexToAscii(donor[2])}); 
+                    
+                const res = await ipfs.cat(donor[0]);
+                const temp = JSON.parse(res.toString());
+                this.setState({
+                    fname: temp["fname"],
+                    lname: temp["lname"],
+                    gender: temp["gender"],
+                    email: temp["email"],
+                    contact: temp["phone"],
+                    city: temp["city"],
+                    donorFound : true
                 })
             }
         }
         catch(err){
-            console.log(err);
+            console.log("ERROR => " + err);
         }
         
     }
@@ -64,7 +60,7 @@ class RenderList extends Component{
         return(
             <Card.Group centered>
                 { !this.state.donorFound ? null :
-                    <Card style={{width:"370px"}}>
+                    <Card style={{width:"375px"}}>
                         <Card.Content>
                             <Card.Header style={{textAlign:"center"}}>{this.state.fname} {this.state.lname}</Card.Header>
                             <Card.Meta >{this.state.donorId}</Card.Meta>
@@ -85,7 +81,7 @@ class RenderList extends Component{
                         </Card.Content>
                     </Card>
                 }
-                <Card style={{width:"370px"}}>
+                <Card style={{width:"375px"}}>
                     <Card.Content>
                         <Card.Header style={{textAlign:"center"}}>{this.props.recipient.fname} {this.props.recipient.lname}</Card.Header>
                         <Card.Meta >{this.props.recipient.recipientId}</Card.Meta>

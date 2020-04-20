@@ -17,45 +17,39 @@ class TransplantMatch extends Component{
         const hospitalId = hospital.hospital.hospitalpublickey;
         try{
             const recipientCount = await OrganChain.methods.getRecipientCount(hospitalId).call();
-            console.log(recipientCount);
-
             var recipient_arr = [];
             for( let i=0 ; i<recipientCount ; i++ ){
-                console.log(i);
-                const recipient = await OrganChain.methods.getRecipientDetail(hospitalId, i).call();
-                await ipfs.cat(recipient[1], (err, res) => {
-                    if (err) {
-                      console.error(err)
-                      return;
-                    }
-                    const temp = JSON.parse(res.toString());                    
-                    const data = JSON.stringify({
-                        fname: temp["fname"],
-                        lname: temp["lname"],
-                        gender: temp["gender"],
-                        city: temp["city"],
-                        contact: temp["phone"],
-                        email: temp["email"],
-                        recipientId: recipient[0],
-                        organ: web3.utils.hexToAscii(recipient[2]),
-                        bloodgroup: web3.utils.hexToAscii(recipient[3])
-                    });
-                    const element = JSON.parse(data);
-                    recipient_arr.push(element);
-                  });
+                var recipient = await OrganChain.methods.getRecipientDetail(hospitalId, i).call();
+                if(recipient[1] === "")
+                    continue;
+                const res = await ipfs.cat(recipient[1]);
+                const temp = JSON.parse(res.toString());                    
+                const data = JSON.stringify({
+                    fname: temp["fname"],
+                    lname: temp["lname"],
+                    gender: temp["gender"],
+                    city: temp["city"],
+                    contact: temp["phone"],
+                    email: temp["email"],
+                    recipientId: recipient[0],
+                    organ: web3.utils.hexToAscii(recipient[2]),
+                    bloodgroup: web3.utils.hexToAscii(recipient[3])
+                });
+                const element = JSON.parse(data);
+                recipient_arr.push(element);
             }
             this.setState({recipient_arr});
         }
         catch(err){
-            console.log(err);
+            console.log("Error Catched => "+err);
         }
     }
 
     renderList = ()=>{
         const List = this.state.recipient_arr.map((recipient)=>{
             return (
-                <div>
-                    <RenderList recipient={recipient}/>
+                <div key={recipient.recipientId}>
+                    <RenderList recipient={recipient} />
                     <Divider/>
                 </div>
             );

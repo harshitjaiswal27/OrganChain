@@ -32,7 +32,7 @@ class ApproveDonor extends Component{
     onApprove = (event) => {
         event.preventDefault();
 
-        const { fname, lname , email, buffer, ipfsHash, EMRHash, donorId } = this.state;
+        const { fname, lname , email, buffer, donorId } = this.state;
 
         axios.get(`/api/donors/${email}`)
             .then(async (res)=>{
@@ -42,19 +42,15 @@ class ApproveDonor extends Component{
                 
                 const buf = Buffer.from(data);
                 
-                await ipfs.files.add(buf, (err, result) => {
-                    if (err) console.error(err);
-                    this.setState({ ipfsHash : result[0].hash });
-                });
+                const result = await ipfs.files.add(buf);
+                this.setState({ipfsHash :result[0].hash});
                 
-                await ipfs.files.add(buffer, (err, result) => {
-                    if (err) console.error(err);
-                    this.setState({ EMRHash: result[0].hash });
-                });
+                const result1 = await ipfs.files.add(buffer);
+                this.setState({EMRHash :result1[0].hash});
 
                 try{
                     const accounts = await web3.eth.getAccounts();
-                    await OrganChain.methods.addDonor(donorId, ipfsHash, EMRHash, web3.utils.asciiToHex(organ), web3.utils.asciiToHex(bloodgroup)).send({
+                    await OrganChain.methods.addDonor(donorId, this.state.ipfsHash, this.state.EMRHash, web3.utils.asciiToHex(organ), web3.utils.asciiToHex(bloodgroup)).send({
                                 from : accounts[0],
                                 gas: 1000000
                             });
@@ -106,7 +102,7 @@ class ApproveDonor extends Component{
                                 onChange={this.onChange} 
                                 name="donorId" 
                                 label='Donor Public Key' 
-                                placeholder='DOnor Public Key' 
+                                placeholder='Donor Public Key' 
                                 required
                             />
                             <Form.Input
