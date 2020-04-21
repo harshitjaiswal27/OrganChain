@@ -24,11 +24,13 @@ class PatientRecord extends Component{
         try{
             const ipfsHash = await OrganChain.methods.getEMR(publicKey).call();
             if(!ipfsHash)
-                throw "Patient Does Not Exist!";
+                throw Object.assign(
+                    new Error("Patient Doesn't Exists!")
+                );
             this.setState({ipfsHash});
         }
         catch(err){
-            this.setState({ errMsg : err })
+            this.setState({ errMsg : err.message })
         }
         this.setState( { loading : false} );
     }
@@ -53,7 +55,7 @@ class PatientRecord extends Component{
                             />
                             <Message error header="Oops!" content={this.state.errMsg} />
                             <Segment basic textAlign={"center"}>
-                                <Button loading={this.state.loading} positive style={{textAlign:"center"}} type='submit'>Get EMR</Button>
+                                <Button loading={this.state.loading} positive type='submit'>Get EMR</Button>
                             </Segment>
                         </Form>
                         <Segment basic textAlign={"center"}>

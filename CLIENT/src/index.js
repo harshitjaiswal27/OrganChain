@@ -9,8 +9,8 @@ class App extends Component {
     render(){
         return (
             <Router>
-                <Layout>
-                    <div style={{marginTop:"20px"}}>
+                <Layout >
+                    <div style={{marginTop:"20px", marginBottom:"20px"}}>
                         <Routes />
                     </div>
                 </Layout>

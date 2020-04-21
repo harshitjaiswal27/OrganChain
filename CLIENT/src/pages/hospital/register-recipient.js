@@ -189,7 +189,7 @@ class RegisterRecipient extends Component {
                             </Form.Group>
                             <Message error header="Oops!" content={this.state.errMsg} />
                             <Segment basic textAlign={"center"}>
-                                <Button loading={this.state.loading} positive style={{textAlign:"center"}} type='submit'>Submit</Button>
+                                <Button loading={this.state.loading} positive type='submit'>Submit</Button>
                             </Segment>
                         </Form>
                     </Segment>

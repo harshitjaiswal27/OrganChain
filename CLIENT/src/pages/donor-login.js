@@ -50,7 +50,7 @@ class DonorLogin extends Component{
                             />
                             <Message error header="Oops!" content={this.state.errMsg} />
                             <Segment basic textAlign={"center"}>
-                                <Button loading={this.state.loading} positive style={{textAlign:"center"}} type='submit'>Log In</Button>
+                                <Button loading={this.state.loading} positive type='submit'>Log In</Button>
                             </Segment>
                         </Form>
                     </Segment>

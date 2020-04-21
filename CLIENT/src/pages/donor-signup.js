@@ -141,7 +141,7 @@ class DonorSignUp extends Component {
                             </Form.Group>
                             <Message error header="Oops!" content={this.state.errMsg} />
                             <Segment basic textAlign={"center"}>
-                                <Button positive style={{textAlign:"center"}} type='submit'>Submit</Button>
+                                <Button positive type='submit'>Submit</Button>
                             </Segment>
                         </Form>
                     </Segment>

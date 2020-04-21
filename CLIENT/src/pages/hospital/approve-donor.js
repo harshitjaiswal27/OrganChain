@@ -122,7 +122,7 @@ class ApproveDonor extends Component{
                             />
                             <Message error header="Oops!" content={this.state.errMsg} />
                             <Segment basic textAlign={"center"}>
-                                <Button loading={this.state.loading} positive style={{textAlign:"center"}} type='submit'>Approve</Button>
+                                <Button loading={this.state.loading} positive  type='submit'>Approve</Button>
                             </Segment>
                         </Form>
                     </Segment>
