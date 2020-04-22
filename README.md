@@ -16,6 +16,11 @@ Clone the repository by doing `git clone "https://github.com/harshitjaiswal27/Or
 #### `cd CLIENT`
 #### `npm install`
 
+### To seed Database :
+
+#### `cd config`
+#### `node hospitals-seeder.js`
+
 #### To run the backend server :
 
 #### `npm start`
