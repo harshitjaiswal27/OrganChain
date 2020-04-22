@@ -9,26 +9,29 @@ Clone the repository by doing `git clone "https://github.com/harshitjaiswal27/Or
 
 #### To install dependencies for backend server:
 
-#### `npm install`
+* #### `cd SERVER`
+* #### `npm install`
 
 #### To install dependencies for client/frontend server:
 
-#### `cd CLIENT`
-#### `npm install`
+* #### `cd CLIENT`
+* #### `npm install`
 
 ### To seed Database :
 
-#### `cd config`
-#### `node hospitals-seeder.js`
+* #### `cd SERVER`
+* #### `cd config`
+* #### `node hospitals-seeder.js`
 
 #### To run the backend server :
 
-#### `npm start`
+* #### `cd SERVER`
+* #### `npm start`
 
 #### To run the client/frontend server :
 
-#### `cd CLIENT`
-#### `npm start`
+* #### `cd CLIENT`
+* #### `npm start`
 
 Runs the app in the development mode.<br />
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.

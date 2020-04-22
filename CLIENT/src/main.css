@@ -7,14 +7,14 @@
  }
 
  .home{
-     margin-top: -14px;
-     margin-left: -180px;
-     width: auto;
+     margin-top: -8px;
+     max-width: 100%;
+     width: 100%;
  }
 
  #landing-header {
     margin-top: -300px;   
-    margin-bottom: 140px;
+    margin-bottom: 130px;
   }
 
   html,

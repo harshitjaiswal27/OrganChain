@@ -68,7 +68,7 @@ class TransplantMatch extends Component{
                     </Dimmer>
                     :
                     <Grid centered columns={2} style={{marginTop:"10px"}}>
-                        <Grid.Column width={12}>
+                        <Grid.Column width={11}>
                             {this.renderList()} 
                         </Grid.Column>
                     </Grid>

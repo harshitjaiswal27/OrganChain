@@ -38,7 +38,7 @@ class PatientRecord extends Component{
     render(){
         return(
             <Grid centered columns={2} style={{marginTop:'20px'}}>
-                <Grid.Column width={7}>
+                <Grid.Column width={6}>
                     <Segment>
                         <Header as="h3" color="grey" style={{textAlign:"center"}}>
                             Get Patient's EMR 

@@ -72,7 +72,7 @@ class RegisterRecipient extends Component {
     render(){
         return(
             <Grid centered columns={2} style={{marginTop:'20px'}}>
-                <Grid.Column width={11}>
+                <Grid.Column width={9}>
                     <Segment>
                         <Header as="h3" color="grey" style={{textAlign:"center"}}>
                             Register New Recipient

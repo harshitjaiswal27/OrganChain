@@ -6,7 +6,7 @@ class Home extends Component {
     render(){
         return(
             <div >
-                <img className="home" src={'../images/home.png'} alt="Not Found"/>
+                <img className="home" src={'../images/home.png'} width="1400"  alt="Not Found"/>
                 <div id="landing-header">
                     <Segment basic textAlign={"center"}>
                         <Button positive as={Link} style={{marginTop:"50px"}} to="/donor-signup">
