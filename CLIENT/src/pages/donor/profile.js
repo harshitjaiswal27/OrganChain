@@ -31,12 +31,15 @@ class Profile extends Component{
                 });
             data = JSON.parse(data);
             this.setState({donor : data});
-
-            if(donor[4]){
+            
+            console.log(donor[4] === "0x0000000000000000000000000000000000000000");
+                
+            if(donor[4] !== "0x0000000000000000000000000000000000000000"){
                 this.setState({matchFound : true});
                 const recipient = await OrganChain.methods.getRecipient(donor[4]).call();
+                console.log(recipient)                   
                 res = await ipfs.cat(recipient[1]);
-                temp = JSON.parse(res.toString());                    
+                temp = JSON.parse(res.toString()); 
                 data = JSON.stringify({
                         fname: temp["fname"],
                         lname: temp["lname"],
@@ -44,7 +47,7 @@ class Profile extends Component{
                         city: temp["city"],
                         contact: temp["phone"],
                         email: temp["email"],
-                        donorId: this.props.match.params.donorId,
+                        recipient: donor[4],
                         organ: recipient[2],
                         bloodgroup: recipient[3]
                     });
@@ -135,7 +138,7 @@ class Profile extends Component{
                         <Card style={{width:"350px"}}>
                             <Card.Content>
                                 <Card.Header style={{textAlign:"center"}}>{recipient.fname} {recipient.lname}</Card.Header>
-                                <Card.Meta >{recipient.donorId}</Card.Meta>
+                                <Card.Meta >{recipient.recipientId}</Card.Meta>
                                 <Divider/>
                                 <Card.Description style={{fontSize:"16px",marginLeft: "30px"}}>
                                     <strong>Gender : </strong> {recipient.gender} <br/><br/>
