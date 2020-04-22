@@ -136,7 +136,11 @@ class DonorSignUp extends Component {
                                     required
                                 >
                                     <option value='Eyes'>Eyes</option>
+                                    <option value='Heart'>Heart</option>
                                     <option value='Kidney'>Kidney</option>
+                                    <option value='Liver'>Liver</option>
+                                    <option value='Longs'>Lungs</option>
+                                    <option value='Pancreas'>Pancreas</option>
                                 </Form.Field>
                             </Form.Group>
                             <Message error header="Oops!" content={this.state.errMsg} />

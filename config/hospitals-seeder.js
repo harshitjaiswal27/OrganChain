@@ -1,7 +1,7 @@
 const Hospital = require('../models/hospital.model');
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/NewTest', {useNewUrlParser: true, useCreateIndex:true, useUnifiedTopology: true });
+mongoose.connect('mongodb://localhost/OrganChain', {useNewUrlParser: true, useCreateIndex:true, useUnifiedTopology: true });
 
 var db = mongoose.connection;
 
@@ -83,7 +83,7 @@ new Hospital({
 	address: '22, 2A, Mundhwa - Kharadi Rd, Near Nyati Empire, Santipur, Thite Nagar, Kharadi, Pune, Maharashtra',
 	contact: '020-71290222',
 	city: 'Pune',
-	img: 'columbia.jpg'
+	img: 'columbia.png'
 })];
 
 var done=0;

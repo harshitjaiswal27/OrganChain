@@ -15,7 +15,8 @@ class ApproveDonor extends Component{
         ipfsHash : '',
         EMRHash : '',
         loading : false ,
-        errMsg : ''
+        errMsg : '',
+        successMsg:''
     }
 
     onChange = event => {
@@ -34,7 +35,7 @@ class ApproveDonor extends Component{
     onApprove =  (event) => {
         event.preventDefault();
 
-        this.setState( { errMsg :'' } );
+        this.setState( { errMsg :'', successMsg:'' } );
 
         const { fname, lname , email, buffer, donorId } = this.state;
 
@@ -57,10 +58,11 @@ class ApproveDonor extends Component{
 
                 try{
                     const accounts = await web3.eth.getAccounts();
-                    await OrganChain.methods.addDonor(donorId, this.state.ipfsHash, this.state.EMRHash, web3.utils.asciiToHex(organ), web3.utils.asciiToHex(bloodgroup)).send({
+                    await OrganChain.methods.addDonor(donorId, this.state.ipfsHash, this.state.EMRHash, organ, bloodgroup).send({
                                 from : accounts[0],
                                 gas: 1000000
                             });
+                    this.setState({successMsg:"Donor Approved !"})
                 }
                 catch(err){
                     this.setState({ errMsg : err.message })
@@ -79,7 +81,7 @@ class ApproveDonor extends Component{
                             Approve Donor
                         </Header>
                         <Divider/>
-                        <Form onSubmit={this.onApprove} error={!!this.state.errMsg}>
+                        <Form onSubmit={this.onApprove} error={!!this.state.errMsg} success={!!this.state.successMsg}>
                             <Form.Input 
                                 value={this.state.fname} 
                                 onChange={this.onChange} 
@@ -121,6 +123,7 @@ class ApproveDonor extends Component{
                                 required
                             />
                             <Message error header="Oops!" content={this.state.errMsg} />
+                            <Message success header="Sucess" content={this.state.successMsg} />
                             <Segment basic textAlign={"center"}>
                                 <Button loading={this.state.loading} positive  type='submit'>Approve</Button>
                             </Segment>

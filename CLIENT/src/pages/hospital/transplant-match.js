@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import jwtDecode from 'jwt-decode';
 import { Grid, Divider, Dimmer, Loader} from 'semantic-ui-react';
 import OrganChain from '../../ethereum/organchain';
-import web3 from '../../ethereum/web3';
 import ipfs from '../../ipfs';
 import RenderList from './render-list';
 
@@ -33,8 +32,8 @@ class TransplantMatch extends Component{
                     contact: temp["phone"],
                     email: temp["email"],
                     recipientId: recipient[0],
-                    organ: web3.utils.hexToAscii(recipient[2]),
-                    bloodgroup: web3.utils.hexToAscii(recipient[3])
+                    organ: recipient[2],
+                    bloodgroup: recipient[3]
                 });
                 const element = JSON.parse(data);
                 recipient_arr.push(element);

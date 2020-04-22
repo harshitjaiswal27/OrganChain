@@ -7,8 +7,8 @@ contract OrganChain{
         address hospitalId;
         string ipfsHash;
         string EMRHash;
-        bytes32 organ;
-        bytes32 bloodgroup;
+        string organ;
+        string bloodgroup;
         bool matchFound;
         bool exist;
     }
@@ -18,8 +18,8 @@ contract OrganChain{
         address recipientId;
         string ipfsHash;
         string EMRHash;
-        bytes32 organ;
-        bytes32 bloodgroup;
+        string organ;
+        string bloodgroup;
         bool matchFound;
         bool exist;
     }
@@ -39,13 +39,13 @@ contract OrganChain{
     address[] recipient_arr;
     address[] donor_arr;
     
-    modifier checkRecipientExist(address _recipient_addr){
-        require(!Recipients[_recipient_addr].exist);
+    modifier checkRecipientExist(address _addr){
+        require(!Recipients[_addr].exist);
         _;
     }
     
-     modifier checkDonorExist(address _donor_addr){
-        require(!Donors[_donor_addr].exist);
+     modifier checkDonorExist(address _addr){
+        require(!Donors[_addr].exist);
         _;
     }
     
@@ -53,8 +53,8 @@ contract OrganChain{
         address _donor_addr, 
         string memory _ipfsHash,
         string memory _EMRHash,
-        bytes32  _organ, 
-        bytes32  _bloodgroup) public checkDonorExist(_donor_addr) 
+        string  _organ, 
+        string  _bloodgroup) public checkDonorExist(_donor_addr) checkRecipientExist(_donor_addr)
         {
             Donor memory newDonor = Donor({
                 donorId : _donor_addr,
@@ -70,7 +70,7 @@ contract OrganChain{
             donor_arr.push(_donor_addr);
         }
     
-    function getDonor(address _donor_addr) public view returns ( string memory, bytes32, bytes32, bool, address){
+    function getDonor(address _donor_addr) public view returns ( string memory, string, string, bool, address){
             require(Donors[_donor_addr].exist);
             return(
                 Donors[_donor_addr].ipfsHash,
@@ -86,8 +86,8 @@ contract OrganChain{
         address _hospital_addr,
         string memory _ipfsHash,
         string memory _EMRHash,
-        bytes32 _organ, 
-        bytes32 _bloodgroup) public checkRecipientExist(_recipient_addr) 
+        string _organ, 
+        string _bloodgroup) public checkRecipientExist(_recipient_addr) checkDonorExist(_recipient_addr)
         {
             Recipient memory newRecipient = Recipient({
                 recipientId : _recipient_addr,
@@ -104,7 +104,7 @@ contract OrganChain{
             Hospital_Recipients[_hospital_addr].push(_recipient_addr);
         }
     
-    function getRecipient(address _recipient_addr) public view returns ( address, string memory, bytes32, bytes32, bool){
+    function getRecipient(address _recipient_addr) public view returns ( address, string memory, string, string, bool){
             require(Recipients[_recipient_addr].exist);
             return(
                 Recipients[_recipient_addr].hospitalId,
@@ -120,7 +120,7 @@ contract OrganChain{
         return(Hospital_Recipients[_hospital_addr].length);
     }
     
-    function getRecipientDetail(address _hospital_addr, uint256 i) public view returns(address, string memory, bytes32, bytes32){  
+    function getRecipientDetail(address _hospital_addr, uint256 i) public view returns(address, string memory, string, string){  
             if(!Recipients[Hospital_Recipients[_hospital_addr][i]].matchFound){
                 return(
                     Recipients[Hospital_Recipients[_hospital_addr][i]].recipientId,
@@ -158,8 +158,8 @@ contract OrganChain{
         for(uint i=0 ; i<donor_arr.length ; i++)
         {
             if( !Donors[donor_arr[i]].matchFound 
-            && (Recipients[_recipient_addr].organ == Donors[donor_arr[i]].organ) 
-            && (Recipients[_recipient_addr].bloodgroup == Donors[donor_arr[i]].bloodgroup))
+            && (keccak256(abi.encodePacked(Recipients[_recipient_addr].organ)) == keccak256(abi.encodePacked(Donors[donor_arr[i]].organ))) 
+            && (keccak256(abi.encodePacked(Recipients[_recipient_addr].bloodgroup)) == keccak256(abi.encodePacked(Donors[donor_arr[i]].bloodgroup))))
             {   
                 Transplants[_recipient_addr] = Transplant(_recipient_addr,donor_arr[i],true);
                 Donors[donor_arr[i]].recipientId = _recipient_addr;

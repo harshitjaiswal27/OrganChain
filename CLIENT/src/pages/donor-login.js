@@ -21,7 +21,7 @@ class DonorLogin extends Component{
             window.location = `/donor/profile/${publicKey}`;
         }
         catch(err){
-            this.setState({ errMsg : err.message })
+            this.setState({ errMsg : "You are not approved yet OR you are not registred!" })
         }
         this.setState( { loading : false} );
     }

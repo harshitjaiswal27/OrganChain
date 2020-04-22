@@ -20,13 +20,14 @@ class RegisterRecipient extends Component {
         publicKey : '',
         EMRHash : '',
         loading : false,
-        errMsg : ''
+        errMsg : '',
+        successMsg:''
     }
 
     onSubmit = async (event) => {
         event.preventDefault();
         
-        this.setState( { loading :true , errMsg :'' } );
+        this.setState( { loading :true , errMsg :'', successMsg:'' } );
 
         const { fname, lname, gender, city, phone, email, bloodgroup, organ, buffer, publicKey } = this.state;
 
@@ -43,10 +44,11 @@ class RegisterRecipient extends Component {
 
             const hospital = await jwtDecode(window.localStorage.getItem("token"));
             const accounts = await web3.eth.getAccounts();
-            await OrganChain.methods.addRecipient(publicKey , hospital.hospital.hospitalpublickey, this.state.ipfsHash, this.state.EMRHash, web3.utils.asciiToHex(organ), web3.utils.asciiToHex(bloodgroup)).send({
+            await OrganChain.methods.addRecipient(publicKey , hospital.hospital.hospitalpublickey, this.state.ipfsHash, this.state.EMRHash, organ, bloodgroup).send({
                         from : accounts[0],
                         gas: 1000000
                     });
+            this.setState({successMsg:"Repient Registered Successfully!"})
         }
         catch(err){
             this.setState({ errMsg : err.message })
@@ -76,7 +78,7 @@ class RegisterRecipient extends Component {
                             Register New Recipient
                         </Header>
                         <Divider/>
-                        <Form onSubmit={this.onSubmit} error={!!this.state.errMsg}>
+                        <Form onSubmit={this.onSubmit} error={!!this.state.errMsg} success={!!this.state.successMsg}>
                             <Form.Group widths={2}>
                                 <Form.Input 
                                     value={this.state.fname} 
@@ -167,7 +169,11 @@ class RegisterRecipient extends Component {
                                     required
                                 >
                                     <option value='Eyes'>Eyes</option>
+                                    <option value='Heart'>Heart</option>
                                     <option value='Kidney'>Kidney</option>
+                                    <option value='Liver'>Liver</option>
+                                    <option value='Longs'>Lungs</option>
+                                    <option value='Pancreas'>Pancreas</option>
                                 </Form.Field>
                             </Form.Group>
                             <Form.Group widths={2}>
@@ -188,6 +194,7 @@ class RegisterRecipient extends Component {
                                 />
                             </Form.Group>
                             <Message error header="Oops!" content={this.state.errMsg} />
+                            <Message success header="Success" content={this.state.successMsg} />
                             <Segment basic textAlign={"center"}>
                                 <Button loading={this.state.loading} positive type='submit'>Submit</Button>
                             </Segment>
