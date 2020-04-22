@@ -27,8 +27,8 @@ class Profile extends Component{
                     contact: temp["phone"],
                     email: temp["email"],
                     donorId: this.props.match.params.donorId,
-                    organ: web3.utils.hexToAscii(donor[1]),
-                    bloodgroup: web3.utils.hexToAscii(donor[2])
+                    organ: donor[1],
+                    bloodgroup: donor[2]
                 });
             data = JSON.parse(data);
             this.setState({donor : data});
