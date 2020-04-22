@@ -3,7 +3,6 @@ import { Card, Header, Divider, Image, Dimmer, Loader} from 'semantic-ui-react';
 import axios from 'axios';
 import OrganChain from '../../ethereum/organchain';
 import ipfs from '../../ipfs';
-import web3 from '../../ethereum/web3';
 
 class Profile extends Component{
     state = {
@@ -46,8 +45,8 @@ class Profile extends Component{
                         contact: temp["phone"],
                         email: temp["email"],
                         donorId: this.props.match.params.donorId,
-                        organ: web3.utils.hexToAscii(recipient[2]),
-                        bloodgroup: web3.utils.hexToAscii(recipient[3])
+                        organ: recipient[2],
+                        bloodgroup: recipient[3]
                     });
                 data = JSON.parse(data);
                 this.setState({recipient : data});
