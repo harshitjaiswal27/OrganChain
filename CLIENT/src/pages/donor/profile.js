@@ -31,13 +31,10 @@ class Profile extends Component{
                 });
             data = JSON.parse(data);
             this.setState({donor : data});
-            
-            console.log(donor[4] === "0x0000000000000000000000000000000000000000");
-                
+                            
             if(donor[4] !== "0x0000000000000000000000000000000000000000"){
                 this.setState({matchFound : true});
                 const recipient = await OrganChain.methods.getRecipient(donor[4]).call();
-                console.log(recipient)                   
                 res = await ipfs.cat(recipient[1]);
                 temp = JSON.parse(res.toString()); 
                 data = JSON.stringify({
