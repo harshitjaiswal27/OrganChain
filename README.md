@@ -1,7 +1,7 @@
 # OrganChain
-A decentralized organ donation platform based on the ethereum blockchain.  <br/>
+A Decentralized application for tracking Organs donations in hospitals and minimizing the scope of Organ trafficking using Blockchain (Ethereum) technology.<br/>
 
-### To Run the Project :
+### Instructions to o Run the Project :
 
 Clone the repository by doing `git clone "https://github.com/harshitjaiswal27/OrganChain.git"`
 
@@ -34,5 +34,9 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 ### Technology Stack :
 
 ![Screenshot](/CLIENT/public/images/TechStack.PNG)
+
+### License
+
+This project is available under MIT license. See the [LICENSE](/LICENSE) file for more info.
 
 
