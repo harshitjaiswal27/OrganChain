@@ -26,7 +26,7 @@ class RenderList extends Component{
     onMatch = async()=>{
         const accounts = await web3.eth.getAccounts();
         
-        this.setState( { loading :true} );
+        this.setState( { loading :true , open : false} );
 
         try{
             await OrganChain.methods.transplantMatch(this.props.recipient.recipientId).send({
@@ -35,12 +35,15 @@ class RenderList extends Component{
             });
 
             const result = await OrganChain.methods.isMatchFound(this.props.recipient.recipientId).call();
-            if(result === "false")
-                window.alert("Match Not Found");
+            if(result === "false"){
+                throw Object.assign(
+                    new Error("Match Not Found!")
+                );
+            }
             else{
                 const donorId = await OrganChain.methods.getMatchedDonor(this.props.recipient.recipientId).call();
                 const donor = await OrganChain.methods.getDonor(donorId).call();
-                this.setState({donorId :donorId, organ: web3.utils.hexToAscii(donor[1]), bloodgroup: web3.utils.hexToAscii(donor[2])}); 
+                this.setState({donorId :donorId, organ: donor[1], bloodgroup:donor[2]}); 
                     
                 const res = await ipfs.cat(donor[0]);
                 const temp = JSON.parse(res.toString());
@@ -70,7 +73,7 @@ class RenderList extends Component{
                     <Card style={{width:"375px"}}>
                         <Card.Content>
                             <Card.Header style={{textAlign:"center"}}>{this.state.fname} {this.state.lname}</Card.Header>
-                            <Card.Meta >{this.state.donorId}</Card.Meta>
+                            <Card.Meta style={{textAlign:"center"}}>{this.state.donorId}</Card.Meta>
                             <Divider/>
                             <Card.Description style={{fontSize:"16px",marginLeft: "30px"}}>
                                 <strong>Gender : </strong> {this.state.gender} <br/><br/>
@@ -91,7 +94,7 @@ class RenderList extends Component{
                 <Card style={{width:"375px"}} >
                     <Card.Content>
                         <Card.Header style={{textAlign:"center"}}>{this.props.recipient.fname} {this.props.recipient.lname}</Card.Header>
-                        <Card.Meta >{this.props.recipient.recipientId}</Card.Meta>
+                        <Card.Meta style={{textAlign:"center"}}>{this.props.recipient.recipientId}</Card.Meta>
                         <Divider/>
                         <Card.Description style={{fontSize:"16px",marginLeft: "30px"}}>
                             <strong>Gender : </strong> {this.props.recipient.gender} <br/><br/>

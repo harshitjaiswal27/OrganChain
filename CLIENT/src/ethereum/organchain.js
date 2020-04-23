@@ -3,7 +3,7 @@ import OrganChain from './build/OrganChain.json';
 
 const instance = new web3.eth.Contract(
     JSON.parse(OrganChain.interface),
-    '0xDf15515F98Cf8Ed12B6152B67a1dcc98990b9DB3'
+    '0x39455f58763AF5515dF6a262Be5e19Ca17B1F53e'
 )
 
 export default instance;

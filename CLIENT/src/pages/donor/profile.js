@@ -78,7 +78,7 @@ class Profile extends Component{
                     <Card style={{width:"350px"}}>
                         <Card.Content>
                             <Card.Header style={{textAlign:"center"}}>{donor.fname} {donor.lname}</Card.Header>
-                            <Card.Meta >{donor.donorId}</Card.Meta>
+                            <Card.Meta style={{textAlign:"center"}}>{donor.donorId}</Card.Meta>
                             <Divider/>
                             <Card.Description style={{fontSize:"16px",marginLeft: "30px"}}>
                                 <strong>Gender : </strong> {donor.gender} <br/><br/>
@@ -109,7 +109,7 @@ class Profile extends Component{
                             <Image src={`../../images/${hospital.img}`} wrapped ui={false} />
                             <Card.Content>
                                 <Card.Header style={{textAlign:"center"}}>{hospital.username} </Card.Header>
-                                <Card.Meta >{hospital.hospitalpublickey}</Card.Meta>
+                                <Card.Meta style={{textAlign:"center"}}>{hospital.hospitalpublickey}</Card.Meta>
                                 <Divider/>
                                 <Card.Description style={{fontSize:"16px",marginLeft: "30px"}}>
                                     <strong>Address : </strong> {hospital.address} <br/><br/>
@@ -135,7 +135,7 @@ class Profile extends Component{
                         <Card style={{width:"350px"}}>
                             <Card.Content>
                                 <Card.Header style={{textAlign:"center"}}>{recipient.fname} {recipient.lname}</Card.Header>
-                                <Card.Meta >{recipient.recipientId}</Card.Meta>
+                                <Card.Meta style={{textAlign:"center"}}>{recipient.recipientId}</Card.Meta>
                                 <Divider/>
                                 <Card.Description style={{fontSize:"16px",marginLeft: "30px"}}>
                                     <strong>Gender : </strong> {recipient.gender} <br/><br/>
